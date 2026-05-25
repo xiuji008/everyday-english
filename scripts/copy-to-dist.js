@@ -67,4 +67,15 @@ scanDir(distDocsDir, distDocsDir)
 result.sort((a, b) => b.date.localeCompare(a.date) || b.seq.localeCompare(a.seq))
 fs.writeFileSync(path.join(distDocsDir, 'words-index.json'), JSON.stringify(result, null, 2), 'utf-8')
 console.log(`✅ words-index.json 已生成 (${result.length} 个文件)`)
+
+// 5. 生成 images-index.json（列出 images 下的图片，供前台随机选用）
+const exts = ['jpg', 'jpeg', 'png', 'webp', 'gif']
+const imagesDir = path.join(distDocsDir, 'images')
+let images = []
+try {
+  const files = fs.readdirSync(imagesDir)
+  images = files.filter(f => exts.includes(path.extname(f).toLowerCase().replace('.', '')))
+} catch { /* ignore */ }
+fs.writeFileSync(path.join(distDocsDir, 'images-index.json'), JSON.stringify(images, null, 2), 'utf-8')
+console.log(`✅ images-index.json 已生成 (${images.length} 张图片)`)
 console.log('✅ dist/ 构建完成，可直接部署')

@@ -111,7 +111,7 @@ export default defineConfig({
             }
             const image = images.length > 0 ? images[Math.floor(Math.random() * images.length)] : ''
             res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ image, url: image ? `/docs/images/${image}` : '' }))
+            res.end(JSON.stringify({ image, url: image ? `./docs/images/${image}` : '' }))
             return
           }
 

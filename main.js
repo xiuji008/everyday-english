@@ -63,8 +63,16 @@ async function fetchRandomImage() {
     }
   } catch { /* 忽略 */ }
 
-  // GitHub Pages: 随机选取 images 下的一张图（文件名列表从索引获取）
-  // 无 API 时直接返回空，显示纯色渐变背景
+  // GitHub Pages: 读取图片索引，随机选一张
+  try {
+    const res = await fetch('./docs/images-index.json')
+    const images = await res.json()
+    if (images.length > 0) {
+      const img = images[Math.floor(Math.random() * images.length)]
+      return `./docs/images/${img}`
+    }
+  } catch { /* 忽略 */ }
+
   return ''
 }
 
