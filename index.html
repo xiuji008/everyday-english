@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>每日英语单词</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <img src="/avatar.png" alt="logo" class="sidebar-logo-img">
+          <div class="sidebar-logo-text">
+            <h2>每日英语</h2>
+            <p class="sidebar-subtitle">单词列表</p>
+          </div>
+        </div>
+      </div>
+      <div id="wordList" class="word-list-sidebar">
+        <div class="loading">加载中...</div>
+      </div>
+    </aside>
+    <main id="content">
+      <div id="welcome" class="welcome">
+        <div class="welcome-icon">📖</div>
+        <h1>每日英语单词</h1>
+        <p>每天 5 个实用单词，轻松积累词汇</p>
+        <p class="welcome-hint">从左侧列表选择一天查看单词</p>
+      </div>
+      <div id="wordDetail" class="word-detail" style="display:none">
+        <div id="detailHero" class="detail-hero"></div>
+        <div id="detailWords" class="detail-words"></div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>

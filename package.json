@@ -1,0 +1,17 @@
+{
+  "name": "everyday-english",
+  "version": "1.0.0",
+  "description": "每日英语单词 - Vite 本地开发服务器，浏览 docs/YYYY/MM/ 下的每日单词",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "generate": "node scripts/generate-daily-words.js"
+  },
+  "keywords": ["english", "daily-words", "github-pages"],
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^6.3.0"
+  }
+}

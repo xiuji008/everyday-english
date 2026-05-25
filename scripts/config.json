@@ -1,0 +1,21 @@
+{
+  "repo_path": "d:/ai-project/everyday-english",
+  "words_per_day": 5,
+  "image_dir": "docs/images",
+  "image_extensions": ["jpg", "jpeg", "png", "webp"],
+  "default_emojis": ["📚", "📖", "✍️", "🌟", "💡"],
+  "default_category": "/English/Daily",
+  "default_tags": ["英语学习", "词汇积累"],
+  "idioms": [
+    "养天地正气，法古今完人",
+    "学而不思则罔，思而不学则殆",
+    "千里之行，始于足下",
+    "温故而知新，可以为师矣",
+    "知之者不如好之者，好之者不如乐之者",
+    "书山有路勤为径，学海无涯苦作舟",
+    "不积跬步，无以至千里",
+    "业精于勤，荒于嬉；行成于思，毁于随",
+    "宝剑锋从磨砺出，梅花香自苦寒来",
+    "读万卷书，行万里路"
+  ]
+}
