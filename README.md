@@ -61,4 +61,9 @@ node scripts/generate-daily-words.js <command>
 2. 每次提交前运行 `node scripts/generate-index.js` 更新索引
 3. 提交后 1-2 分钟自动生效
 
-> **提示**：本地开发用 `npm run dev`（Vite 会自动提供 API），生产环境用预生成的 `words-index.json`。
+> **提示**：本地开发用 `npm run dev`（Vite 提供 API），生产环境通过 `docs/words-index.json` + `docs/YYYY/MM/*.md` 直接读取。
+
+### 注意事项
+
+- 根目录下的 `.nojekyll` 文件必须有，否则 GitHub Pages 会忽略 `docs/` 目录
+- `words-index.json` 由 `scripts/generate-index.js` 生成，提交前务必运行

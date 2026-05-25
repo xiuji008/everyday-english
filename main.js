@@ -17,17 +17,26 @@ const state = {
 // ============ API 调用 ============
 
 async function fetchWordList() {
-  const res = await fetch('/api/words')
-  if (!res.ok) throw new Error(`API return ${res.status}`)
+  // 开发环境: Vite API
+  try {
+    const res = await fetch('/api/words')
+    if (res.ok) {
+      const data = await res.json()
+      if (Array.isArray(data)) return data
+    }
+  } catch { /* 忽略 */ }
+
+  // GitHub Pages: 预生成的索引文件
+  const res = await fetch('./docs/words-index.json')
   const data = await res.json()
-  if (!Array.isArray(data)) throw new Error('API return non-array')
+  if (!Array.isArray(data)) throw new Error('words-index.json format error')
   return data
 }
 
 async function fetchWordContent(filePath) {
   const res = await fetch(`/api/word-content?file=${encodeURIComponent(filePath)}`)
   if (!res.ok) {
-    const mdRes = await fetch(`./${filePath}`)
+    const mdRes = await fetch(`./docs/${filePath}`)
     const text = await mdRes.text()
     let frontmatter = {}
     let body = text
@@ -45,13 +54,18 @@ async function fetchWordContent(filePath) {
 }
 
 async function fetchRandomImage() {
+  // 开发环境: Vite API
   try {
     const res = await fetch('/api/random-image')
-    const data = await res.json()
-    return data.url || ''
-  } catch {
-    return ''
-  }
+    if (res.ok) {
+      const data = await res.json()
+      if (data.url) return data.url
+    }
+  } catch { /* 忽略 */ }
+
+  // GitHub Pages: 随机选取 images 下的一张图（文件名列表从索引获取）
+  // 无 API 时直接返回空，显示纯色渐变背景
+  return ''
 }
 
 // ============ 侧边栏渲染（可折叠） ============
