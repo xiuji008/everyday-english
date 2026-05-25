@@ -189,29 +189,17 @@ EOF
 
 或直接使用 Write 工具创建文件到 `docs/{YYYY}/{MM}/{YYYY-MM-DD}-{seqStr}.md`。
 
-### 步骤 9：生成索引并推送
+### 步骤 9：自动推送
 
-提交前先生成 GitHub Pages 生产环境索引文件：
-
-```bash
-node scripts/generate-index.js
-```
-
-然后提交并推送：
+使用一键推送命令（自动生成索引 + git add + commit + push）：
 
 ```bash
-node scripts/generate-daily-words.js git-push {YYYY-MM-DD} {seqStr}
+node scripts/generate-daily-words.js full-push {YYYY-MM-DD}-{seqStr}
 ```
 
-或手动操作：
-```bash
-cd {项目根目录}
-git add .
-git commit -m "feat: 添加 {YYYY-MM-DD}-{seqStr} 每日英语单词"
-git push
-```
+本步骤为**自动执行**，无需用户手动操作。推送后告知用户："GitHub Pages 将在 1-2 分钟内自动更新网站。"
 
-推送后告知用户："GitHub Pages 将在 1-2 分钟内自动更新网站。"
+> 如果推送失败，检查 git 远程仓库是否已配置。
 
 ## 辅助脚本
 
@@ -225,6 +213,7 @@ git push
 | `existing-words` | 列出所有已使用的单词 |
 | `write-file <date> <seq>` | 从 stdin 写入 Markdown 文件 |
 | `git-push <date> <seq>` | Git 添加、提交并推送 |
+| `full-push [msg]` | 自动生成索引 + git add/commit/push |
 
 ## 重要提示
 

@@ -248,6 +248,26 @@ switch (command) {
       writeFile(process.argv[3], process.argv[4], body);
     });
     break;
+  case 'full-push':
+    // 完整自动推送：生成索引 → git add → git commit → git push
+    const { execSync } = require('child_process');
+    const repoPath = path.resolve(__dirname, '..');
+    try {
+      execSync('node scripts/generate-index.js', { cwd: repoPath, stdio: 'inherit' });
+      execSync('git add .', { cwd: repoPath, stdio: 'inherit' });
+      const status = execSync('git status --porcelain', { cwd: repoPath, encoding: 'utf-8' }).trim();
+      if (!status) {
+        console.log('没有变更需要提交');
+        break;
+      }
+      const msg = `feat: 添加 ${process.argv[3] || '今日'} 每日英语单词`;
+      execSync(`git commit -m "${msg}"`, { cwd: repoPath, stdio: 'inherit' });
+      execSync('git push', { cwd: repoPath, stdio: 'inherit' });
+      console.log('✅ 自动推送完成！GitHub Pages 将在 1-2 分钟内更新。');
+    } catch (e) {
+      console.error('❌ 自动推送失败:', e.message);
+    }
+    break;
   default:
     console.log(`
 用法: node scripts/generate-daily-words.js <命令> [参数]
@@ -259,6 +279,7 @@ switch (command) {
   existing-words         - 获取已有单词列表（去重用）
   git-push <date> <seq>  - Git 提交并推送
   write-file <date> <seq> - 写入 Markdown 文件（从 stdin 读取内容）
+  full-push [msg]        - 一键生成索引 + git add/commit/push
 `);
     break;
 }
