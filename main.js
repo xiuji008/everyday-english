@@ -14,19 +14,24 @@ const state = {
   collapsedMonths: new Set() // 已折叠的年月 key: "YYYY-MM"
 }
 
-// ============ API 调用 ============
+// ============ 开发/生产环境检测 ============
+// Vite dev server 在 localhost:3000 运行，带 /api/ 端点
+const isDev = window.location.hostname === 'localhost' && window.location.port === '3000'
+
+// ============ 数据获取 ============
 
 async function fetchWordList() {
-  // 开发环境: Vite API
-  try {
-    const res = await fetch('/api/words')
-    if (res.ok) {
-      const data = await res.json()
-      if (Array.isArray(data)) return data
-    }
-  } catch { /* 忽略 */ }
-
-  // GitHub Pages: 预生成的索引文件
+  // 开发环境走 Vite API（提供动态去重等功能）
+  if (isDev) {
+    try {
+      const res = await fetch('/api/words')
+      if (res.ok) {
+        const data = await res.json()
+        if (Array.isArray(data)) return data
+      }
+    } catch { /* 忽略 */ }
+  }
+  // 生产环境直接读取静态索引
   const res = await fetch('./docs/words-index.json')
   const data = await res.json()
   if (!Array.isArray(data)) throw new Error('words-index.json format error')
@@ -34,36 +39,41 @@ async function fetchWordList() {
 }
 
 async function fetchWordContent(filePath) {
-  const res = await fetch(`/api/word-content?file=${encodeURIComponent(filePath)}`)
-  if (!res.ok) {
-    const mdRes = await fetch(`./docs/${filePath}`)
-    const text = await mdRes.text()
-    let frontmatter = {}
-    let body = text
-    const fmMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/)
-    if (fmMatch) {
-      for (const line of fmMatch[1].split(/\r?\n/)) {
-        const kv = line.match(/^(\w+):\s*(.+)$/)
-        if (kv) frontmatter[kv[1]] = kv[2].replace(/^'(.*)'$/, '$1').replace(/^"(.*)"$/, '$1')
-      }
-      body = fmMatch[2]
-    }
-    return { frontmatter, body }
+  // 开发环境走 Vite API（解析前文文件）
+  if (isDev) {
+    try {
+      const res = await fetch(`/api/word-content?file=${encodeURIComponent(filePath)}`)
+      if (res.ok) return res.json()
+    } catch { /* 忽略 */ }
   }
-  return res.json()
+  // 生产环境直接读取 MD 文件并解析 frontmatter
+  const mdRes = await fetch(`./docs/${filePath}`)
+  const text = await mdRes.text()
+  let frontmatter = {}
+  let body = text
+  const fmMatch = text.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/)
+  if (fmMatch) {
+    for (const line of fmMatch[1].split(/\r?\n/)) {
+      const kv = line.match(/^(\w+):\s*(.+)$/)
+      if (kv) frontmatter[kv[1]] = kv[2].replace(/^'(.*)'$/, '$1').replace(/^"(.*)"$/, '$1')
+    }
+    body = fmMatch[2]
+  }
+  return { frontmatter, body }
 }
 
 async function fetchRandomImage() {
-  // 开发环境: Vite API
-  try {
-    const res = await fetch('/api/random-image')
-    if (res.ok) {
-      const data = await res.json()
-      if (data.url) return data.url
-    }
-  } catch { /* 忽略 */ }
-
-  // GitHub Pages: 读取图片索引，随机选一张
+  // 开发环境走 Vite API
+  if (isDev) {
+    try {
+      const res = await fetch('/api/random-image')
+      if (res.ok) {
+        const data = await res.json()
+        if (data.url) return data.url
+      }
+    } catch { /* 忽略 */ }
+  }
+  // 生产环境：读取图片索引，随机选一张
   try {
     const res = await fetch('./docs/images-index.json')
     const images = await res.json()
@@ -72,7 +82,6 @@ async function fetchRandomImage() {
       return `./docs/images/${img}`
     }
   } catch { /* 忽略 */ }
-
   return ''
 }
 
